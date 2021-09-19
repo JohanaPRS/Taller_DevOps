@@ -3,6 +3,7 @@ pipeline {
   stages {
     stage('Check env') {
       steps {
+        tool 'maven'
         sh 'mvn -v'
         sh 'java -version'
       }
