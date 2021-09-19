@@ -1,13 +1,16 @@
 pipeline {
   agent any
+   tools {
+    maven 'M3'
+  }
   stages {
     stage('Build') {
-       withMaven(maven: 'mvn') {
-        sh 'mvn -B'
+       steps {
         sh 'mvn clean package'
         sh '''java -jar spring-boot-docker-0.0.1-SNAPSHOT.jar
 '''     }
     }
+  }
 
     stage('Test') {
       steps {
