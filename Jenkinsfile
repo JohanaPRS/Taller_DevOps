@@ -3,7 +3,8 @@ pipeline {
   stages {
     stage('Build') {
       steps {
-        sh 'clean package'
+        sh 'mvn compile'
+        sh 'mvn clean package'
         sh '''java -jar spring-boot-docker-0.0.1-SNAPSHOT.jar
 '''
       }
