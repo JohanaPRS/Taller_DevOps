@@ -15,6 +15,8 @@
 	<description>Demo project for Spring Boot</description>
 	<properties>
 		<java.version>1.8</java.version>
+		<docker.image.prefix>deors</docker.image.prefix>
+
 	</properties>
 	<dependencies>
 		<dependency>
@@ -27,6 +29,13 @@
 			<artifactId>spring-boot-starter-test</artifactId>
 			<scope>test</scope>
 		</dependency>
+		<dependency>
+       			<groupId>org.jacoco</groupId>
+        		<artifactId>org.jacoco.agent</artifactId>
+        		<version>0.8.3</version>
+        		<classifier>runtime</classifier>
+        		<scope>test</scope>
+    		</dependency>
 	</dependencies>
 
 	<build>
@@ -37,8 +46,37 @@
 				<version>${project.parent.version}</version>
 				<configuration>
 					<mainClass>com.example.springbootdocker.SpringBootDockerApplication</mainClass>
+					<argLine>-javaagent:${settings.localRepository}/org/jacoco/org.jacoco.agent/0.8.3/org.jacoco.agent-0.8.3-runtime.jar=destfile=${project.build.directory}/jacoco.exec</argLine>
 				</configuration>
 			</plugin>
+			<plugin>
+            			<groupId>org.pitest</groupId>
+           			<artifactId>pitest-maven</artifactId>
+            			<version>1.4.5</version>
+            			<configuration>
+                			<excludedTestClasses>
+                    				<param>*ApplicationTests</param>
+                    				<param>*IntegrationTest</param>
+                			</excludedTestClasses>
+                		<outputFormats>
+                   			<outputFormat>XML</outputFormat>
+                		</outputFormats>
+            			</configuration>
+        		</plugin>
+			<plugin>
+            			<groupId>com.spotify</groupId>
+            			<artifactId>docker-maven-plugin</artifactId>
+            			<version>1.2.0</version>
+            			<configuration>
+               				<dockerDirectory>${project.basedir}</dockerDirectory>
+                			<imageName>${docker.image.prefix}/${project.name}</imageName>
+                			<imageTags>
+                    				<imageTag>${project.version}</imageTag>
+                    				<imageTag>latest</imageTag>
+                			</imageTags>
+                			<serverId>docker-hub</serverId>
+            			</configuration>
+        		</plugin>
 		</plugins>
 	</build>
 
